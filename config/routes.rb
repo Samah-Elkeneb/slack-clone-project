@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :messages
   resources :channels
   get "home/index"
   devise_for :users
@@ -9,7 +10,7 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   authenticated :user do
-    root to: "channels#index", as: :authenticated_root
+    root to: "home#index", as: :authenticated_root
   end
 
   devise_scope :user do
