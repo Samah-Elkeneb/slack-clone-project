@@ -3,6 +3,17 @@ class ChannelsController < ApplicationController
   before_action :authenticate_user!
   before_action :require_admin, only: %i[ new create edit update destroy]
 
+
+  def messages
+    @active_channel = Channel.find(params[:id])
+    @active_channel_id = @active_channel.id
+    @channel = @active_channel
+    @messages = @active_channel.messages.includes(:user)
+    @message = @channel.messages.build
+
+    render partial: "home/messages", locals: { new_message: @message, channel: @active_channel, messages: @messages }
+  end
+
   # GET /channels or /channels.json
   def index
     @channels = Channel.all

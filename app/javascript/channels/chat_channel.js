@@ -1,24 +1,33 @@
 import consumer from "channels/consumer"
 
-const chatBox = document.getElementById("chat-box")
-const roomName = chatBox.dataset.room
+function isSubscribed(roomName) {
+  return consumer.subscriptions.subscriptions.some(sub => {
+    const params = JSON.parse(sub.identifier)
+    return params.channel === "ChatChannel" && params.room === roomName
+  })
+}
+function createRoomSubscription(roomName) {
+  if (isSubscribed(roomName)) {
+    console.log(`Already subscribed to ${roomName}`);
+    return;
+  }
 
-consumer.subscriptions.create({ channel: "ChatChannel", room: roomName }, {
+  consumer.subscriptions.create(
+    { channel: "ChatChannel", room: roomName },
+      {
+        received(data) {
+          this.appendLine(data);
+        },
 
-  received(data) {
-    this.appendLine(data)
-  },
+        appendLine(data) {
+          const html = this.createLine(data);
+          const chatBox = document.getElementById("chat-box");
+          chatBox.insertAdjacentHTML("beforeend", html);
+      },
 
-  appendLine(data) {
-    const html = this.createLine(data)
-    console.log(data)
-    // const element = document.querySelector("[data-chat-room='Best Room']")
-    chatBox.insertAdjacentHTML("beforeend", html)
-  },
-
-  createLine(data) {
-    return `
-      <article class="mb-4">
+      createLine(data) {
+        return `
+          <article class="mb-4">
             <div class="flex items-baseline gap-3">
               <div class="h-8 w-8 rounded-full bg-slate-300 flex items-center justify-center text-sm font-medium">
                 ${data["user_name"]}
@@ -35,6 +44,10 @@ consumer.subscriptions.create({ channel: "ChatChannel", room: roomName }, {
               </div>
             </div>
           </article>
-    `
-  }
-})
+        `;
+      }
+    }
+  );
+}
+
+export { createRoomSubscription }
