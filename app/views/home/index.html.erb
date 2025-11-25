@@ -26,7 +26,7 @@
       <p class="text-xs text-slate-500">channel description</p>
     </header>
 
-    <section class="flex-1 overflow-auto p-6 bg-slate-50">
+    <section class="flex-1 overflow-auto p-6 bg-slate-50" id="chat-box" data-room="<%= @active_channel.name %>_<%= @active_channel_id %>">
       <% if @messages.empty? %>
         <div class="text-center text-slate-500 py-12">
          no messages yet

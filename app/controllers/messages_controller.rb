@@ -19,6 +19,16 @@ class MessagesController < ApplicationController
   def create
     @message = Message.new(message_params)
     @message.save
+    ActionCable.server.broadcast(
+  "#{@message.channel.name}_#{@message.channel.id}",
+  {
+    user_name: current_user.email.first,
+    user_email: current_user.email,
+    body: @message.content,
+    created_at: @message.created_at.strftime("%H:%M")
+  }
+)
+head :ok
   end
 
   def update
