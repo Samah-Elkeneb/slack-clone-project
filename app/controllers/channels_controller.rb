@@ -6,13 +6,29 @@ class ChannelsController < ApplicationController
 
   def messages
     @active_channel = Channel.find(params[:id])
-    @active_channel_id = @active_channel.id
-    @channel = @active_channel
-    @messages = @active_channel.messages.includes(:user)
-    @message = @channel.messages.build
-
-    render partial: "home/messages", locals: { new_message: @message, channel: @active_channel, messages: @messages }
+    @messages = @active_channel.messages.includes(:user).order(created_at: :desc).limit(10)
+    @message = @active_channel.messages.build
+    render partial: "messages",
+      locals: { new_message: @message, channel: @active_channel, messages: @messages.reverse }
   end
+
+  def load_more
+    @channel = Channel.find(params[:id])
+    before_id = params[:before_id].to_i
+    limit = (params[:limit] || 10).to_i
+
+    @messages = @channel.messages
+                      .where("id < ?", before_id)
+                      .order(id: :desc)
+                      .limit(limit)
+
+    return head :no_content if @messages.empty?
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html { render partial: "message_item", collection: @messages.reverse, as: :message }
+  end
+end
 
   # GET /channels or /channels.json
   def index

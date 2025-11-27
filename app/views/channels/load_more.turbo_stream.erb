@@ -1,0 +1,3 @@
+<%= turbo_stream.prepend "chat-box" do %>
+  <%= render partial: "message_item", collection: @messages, as: :message %>
+<% end %>

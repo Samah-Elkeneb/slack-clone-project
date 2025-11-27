@@ -1,0 +1,16 @@
+<article id="message_<%= message.id %>" class="mb-4">
+  <div class="flex items-baseline gap-3">
+    <div class="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-medium">
+      <%= message.user.email.first %>
+    </div>
+    <div>
+      <div class="text-sm font-medium">
+        <%= message.user.email.split("@").first %>
+        <span class="text-xs text-slate-400 ml-2">
+          <%= message.created_at.strftime('%l:%M %p').strip %>
+        </span>
+      </div>
+      <div class="mt-1 text-sm text-slate-700"><%= message.content %></div>
+    </div>
+  </div>
+</article>

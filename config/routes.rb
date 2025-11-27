@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   end
   resources :channels do
     get :messages, on: :member
+    get :load_more, on: :member
   end
   mount ActionCable.server => "/cable"
 
