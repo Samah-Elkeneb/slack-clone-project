@@ -15,6 +15,7 @@ function createRoomSubscription(roomName) {
     { channel: "ChatChannel", room: roomName },
     {
       received(data) {
+        document.getElementById("no-messages-div")?.remove();
         this.appendLine(data);
       },
 

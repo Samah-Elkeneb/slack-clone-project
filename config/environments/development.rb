@@ -78,4 +78,6 @@ Rails.application.configure do
 
   # In production, :host should be set to the actual host of the application.
   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
+  # Store files locally.
+  config.active_storage.service = :local
 end

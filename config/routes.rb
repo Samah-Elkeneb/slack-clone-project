@@ -22,6 +22,9 @@ Rails.application.routes.draw do
     get :messages, on: :member
     get :load_more, on: :member
   end
+  Rails.application.routes.draw do
+  get "/blobs/:signed_id/preview", to: "blobs#preview", as: "preview_blob"
+end
   mount ActionCable.server => "/cable"
 
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)

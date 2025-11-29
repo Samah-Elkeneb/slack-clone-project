@@ -1,0 +1,6 @@
+<% case attachment.attachable %>
+<% when ActiveStorage::Blob %>
+  <%= render "active_storage/blobs/blob", blob: attachment.attachable %>
+<% else %>
+  <%= attachment.attachable.to_s %>
+<% end %>
