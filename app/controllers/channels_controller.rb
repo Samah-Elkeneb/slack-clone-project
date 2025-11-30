@@ -1,7 +1,7 @@
 class ChannelsController < ApplicationController
-  before_action :set_channel, only: %i[ show edit update destroy ]
+  before_action :set_channel, only: %i[ show edit update destroy add_member]
   before_action :authenticate_user!
-  before_action :require_admin!, only: %i[ edit update destroy]
+  before_action :require_admin!, only: %i[ edit update destroy add_member]
 
   def messages
     @active_channel = Channel.find(params[:id])
@@ -34,9 +34,33 @@ end
     @channels = Channel.all
   end
 
-  # GET /channels/1 or /channels/1.json
-  def show
+# GET /channels/1 or /channels/1.json
+def show
+  respond_to do |format|
+    format.turbo_stream do
+      render turbo_stream: turbo_stream.replace(
+        "modal_frame",
+        partial: "modal_content",
+        locals: { channel: @channel }
+      )
+    end
+    format.html { render :show }
   end
+end
+
+  def add_member
+  @user = User.find(params[:user_id])
+
+  return if @channel.users.include?(@user)
+
+  @channel.users << @user
+
+  respond_to do |format|
+    format.turbo_stream
+    format.html { redirect_to @channel }
+  end
+end
+
 
   # GET /channels/new
   def new

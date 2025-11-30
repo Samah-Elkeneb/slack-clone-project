@@ -1,7 +1,12 @@
 <turbo-frame id="messages_frame">
-  <div id="channel-messages" data-room="<%= channel.name %>_<%= channel.id %>">
+  <div id="channel-messages" data-room="<%= channel.name %>_<%= channel.id %>" data-controller="modal" data-modal-target="frame">
     <header class="px-6 py-3 border-b border-slate-200 bg-white/60 backdrop-blur-sm">
-      <h2 class="text-lg font-semibold"> <%= channel.name %> </h2>
+      <h2 class="text-lg font-semibold" >
+        <a href="<%= channel_path(channel) %>"
+          data-action="click->modal#open">
+          <%= channel.name%>
+        </a>
+      </h2>
       <p class="text-xs text-slate-500">channel description</p>
     </header>
     <div class="h-100 overflow-y-auto bg-gray-100 p-4" id="chat-box" data-controller="infinite" data-infinite-target="box" data-load-more-url="<%= load_more_channel_path(channel)%>">

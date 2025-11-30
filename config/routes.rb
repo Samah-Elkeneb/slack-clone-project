@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   resources :channels do
     get :messages, on: :member
     get :load_more, on: :member
+    post :add_member, on: :member
   end
   Rails.application.routes.draw do
   get "/blobs/:signed_id/preview", to: "blobs#preview", as: "preview_blob"
