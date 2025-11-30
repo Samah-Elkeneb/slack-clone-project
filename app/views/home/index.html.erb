@@ -5,11 +5,6 @@
     </span>
     <ul class="mt-6 space-y-1">
       <li>
-        <a href="#" class="block rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700">
-          General
-        </a>
-      </li>
-      <li>
         <details class="group [&amp;_summary::-webkit-details-marker]:hidden" data-controller="channels" open>
           <summary class="flex cursor-pointer items-center justify-between rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
             <span class="text-sm font-medium"> Channels </span>
@@ -22,12 +17,15 @@
           <ul class="mt-2 space-y-1 px-4">
             <% @channels.each do |channel| %>
               <li>
-                <%= link_to channel.name, messages_channel_path(channel),
+                <%= link_to (channel.public ?  "🌐 " : "🔒 ") + channel.name, messages_channel_path(channel),
          data: { turbo_frame: "messages_frame",
              "action": "click->channels#subscribe",
               channels_target: "link", room: "#{channel.name}_#{channel.id}", },
                class: "channel-link block px-3 py-2 rounded-md mb-1 hover:bg-gray-100" %>
               <% end %>
+            </li>
+            <li>
+              <%= link_to "Add channel", new_channel_path, class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white block font-medium" %>
             </li>
           </details>
         </li>
@@ -55,6 +53,6 @@
       <% end %>
     </div>
   </div>
-  <main class="flex-1 flex flex-col" id="channel-messages" data-room="<%= @channel.name %>_<%= @channel.id %>">
+  <main class="flex-1 flex flex-col">
     <turbo-frame id="messages_frame"> </turbo_frame>
   </main>

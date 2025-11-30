@@ -5,8 +5,11 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :messages, dependent: :destroy
+  has_many :memberships
+  has_many :channels, through: :memberships
+  has_many :created_channels, class_name: "Channel", foreign_key: "creator_id"
 
-  def admin?
-    is_admin
+  def admin?(channel)
+    channel.memberships.admins.exists?(user: self)
   end
 end

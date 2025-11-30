@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_27_135656) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_29_153237) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
@@ -51,8 +51,22 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_27_135656) do
 
   create_table "channels", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.integer "creator_id", null: false
     t.string "name"
+    t.boolean "public", default: true, null: false
     t.datetime "updated_at", null: false
+    t.index ["creator_id"], name: "index_channels_on_creator_id"
+  end
+
+  create_table "memberships", force: :cascade do |t|
+    t.integer "channel_id", null: false
+    t.datetime "created_at", null: false
+    t.string "role", default: "member", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["channel_id"], name: "index_memberships_on_channel_id"
+    t.index ["user_id", "channel_id"], name: "index_memberships_on_user_id_and_channel_id", unique: true
+    t.index ["user_id"], name: "index_memberships_on_user_id"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -68,7 +82,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_27_135656) do
     t.datetime "created_at", null: false
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
-    t.boolean "is_admin", default: false
     t.datetime "remember_created_at"
     t.datetime "reset_password_sent_at"
     t.string "reset_password_token"
@@ -79,6 +92,9 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_27_135656) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "channels", "users", column: "creator_id"
+  add_foreign_key "memberships", "channels"
+  add_foreign_key "memberships", "users"
   add_foreign_key "messages", "channels"
   add_foreign_key "messages", "users"
 end

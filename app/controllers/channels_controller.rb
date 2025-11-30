@@ -1,8 +1,7 @@
 class ChannelsController < ApplicationController
   before_action :set_channel, only: %i[ show edit update destroy ]
   before_action :authenticate_user!
-  before_action :require_admin, only: %i[ new create edit update destroy]
-
+  before_action :require_admin!, only: %i[ edit update destroy]
 
   def messages
     @active_channel = Channel.find(params[:id])
@@ -51,6 +50,7 @@ end
   # POST /channels or /channels.json
   def create
     @channel = Channel.new(channel_params)
+    @channel.creator = current_user
 
     respond_to do |format|
       if @channel.save
@@ -94,6 +94,10 @@ end
 
     # Only allow a list of trusted parameters through.
     def channel_params
-      params.expect(channel: [ :name ])
+      params.expect(channel: [ :name, :public ])
+    end
+
+    def require_admin!
+      redirect_to channels_path, alert: "Not allowed" unless current_user.admin?(@channel)
     end
 end
