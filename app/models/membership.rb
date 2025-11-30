@@ -2,10 +2,9 @@ class Membership < ApplicationRecord
   belongs_to :user
   belongs_to :channel
 
-  enum role: {
-    admin: "admin",
-    member: "member"
-  }
+  ROLES = %w[ admin member]
 
-  scope :admins, -> { admin }
+  validates :role, presence: true, inclusion: { in: ROLES }
+
+  scope :admins, -> { where(role: "admin") }
 end
