@@ -3,6 +3,7 @@ class ChannelsController < ApplicationController
   before_action :authenticate_user!
   before_action :require_admin!, only: %i[ edit update destroy add_member]
 
+  # CRUD
   def messages
     @active_channel = Channel.find(params[:id])
     @messages = @active_channel.messages.includes(:user).order(created_at: :desc).limit(10)
@@ -28,7 +29,7 @@ class ChannelsController < ApplicationController
       format.html { render partial: "message_item", collection: @messages.reverse, as: :message }
   end
 end
-
+  # not used
   # GET /channels or /channels.json
   def index
     @channels = Channel.all
@@ -115,7 +116,7 @@ end
     @channel.destroy!
 
     respond_to do |format|
-      format.html { redirect_to channels_path, notice: "Channel was successfully destroyed.", status: :see_other }
+      format.html { redirect_to home_index_path, notice: "Channel was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
     end
   end
@@ -132,6 +133,6 @@ end
     end
 
     def require_admin!
-      redirect_to channels_path, alert: "Not allowed" unless current_user.admin?(@channel)
+      redirect_to home_index_path, alert: "Not allowed" unless current_user.admin?(@channel)
     end
 end

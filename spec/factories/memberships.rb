@@ -1,7 +1,11 @@
 FactoryBot.define do
   factory :membership do
-    user { nil }
-    channel { nil }
-    role { "MyString" }
+    association :user
+    association :channel
+    role { "member" }
+
+    trait :admin do
+      role { "admin" }
+    end
   end
 end

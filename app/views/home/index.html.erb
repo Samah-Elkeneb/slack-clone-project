@@ -14,13 +14,29 @@
           <ul class="mt-2 space-y-1 px-4">
             <% @channels.each do |channel| %>
               <li>
-                <%= link_to (channel.public ?  "# " : "🔒 ") + channel.name, messages_channel_path(channel),
-         data: { turbo_frame: "messages_frame",
-             "action": "click->channels#subscribe",
-              channels_target: "link", room: "#{channel.name}_#{channel.id}", },
-               class: "channel-link block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700" %>
-              <% end %>
-            </li>
+                <div class="flex justify-between items-center mb-4">
+                  <%= link_to (channel.public ?  "# " : "🔒 ") + channel.name, messages_channel_path(channel),
+                    data: { 
+                      turbo_frame: "messages_frame",
+                      action: "click->channels#subscribe",
+                      channels_target: "link", room: "#{channel.name}_#{channel.id}"
+                       },
+                      class: "channel-link block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"%>
+                  <% if current_user.admin?(channel)%>
+                    <%= button_to channel_path(channel),
+                    method: :delete,
+                    form: { data: { turbo_confirm: "Are you sure you want to delete #{channel.name} channel?" } },
+                    class: "text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700" do %>
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="5" y="6" width="10" height="10" rx="1" ry="1" stroke-linecap="round" stroke-linejoin="round"/>
+                        <line x1="4" y1="6" x2="16" y2="6" stroke-linecap="round" stroke-linejoin="round"/>
+                        <line x1="8" y1="3" x2="12" y2="3" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    <% end %>
+                  <% end %>
+                </div>
+              </li>
+            <%end%>
             <li>
               <div class="flex" data-controller="modal" data-modal-target="frame">
                 <%= link_to new_channel_path, data: { action: "click->modal#open" }, class: "rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 flex items-center gap-2" do %>
@@ -62,6 +78,9 @@
     </div>
   </div>
   <main class="flex-1 flex flex-col">
+    <%= turbo_frame_tag :flash do %>
+      <div id="flash"></div>
+    <% end %>
     <turbo-frame id="messages_frame"> </turbo_frame>
   </main>
   <div id="modal_frame">

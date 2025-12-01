@@ -4,33 +4,49 @@
       <h2 class="text-xl font-semibold"><%= channel.name %></h2>
       <button data-action="click->modal#close" class="text-gray-400 hover:text-gray-600">Close</button>
     </div>
-    <p>This channel is created by <%= channel.creator.email.split('@').first %> on <%= channel.created_at.strftime("%-d %B %Y") %></p>
-    <ul id="members_list">
-      <% channel.users.each do |u| %>
-        <li><%= u.email %></li>
-      <% end %>
-    </ul>
-    <div data-controller="add-member" class="mt-4">
-      <button
+    <div data-controller="tabs">
+      <nav class="flex space-x-4" aria-label="Tabs">
+        <a href="#" data-action="tabs#show" data-tab="1"
+       class="px-3 py-2 font-medium text-sm bg-gray-100 text-gray-700 rounded-md">
+          About
+        </a>
+        <a href="#" data-action="tabs#show" data-tab="2"
+       class="px-3 py-2 font-medium text-sm text-gray-500 hover:text-gray-700">
+          Members <%= channel.users.count%>
+        </a>
+      </nav>
+      <div data-tabs-target="content" data-tab="1" class="mt-4">
+        <p>This channel is created by <%= channel.creator.email.split('@').first %> on <%= channel.created_at.strftime("%-d %B %Y") %></p>
+      </div>
+      <div data-tabs-target="content" data-tab="2" class="mt-4 hidden">
+        <ul id="members_list">
+          <% channel.users.each do |u| %>
+            <li><%= u.email %></li>
+          <% end %>
+        </ul>
+        <div data-controller="add-member" class="mt-4">
+          <button
         class="bg-blue-600 text-white px-3 py-2 rounded"
         data-action="click->add-member#showForm">
-        Add Member
-      </button>
-      <div id="add_member_form" data-add-member-target="form" class="hidden mt-4">
-        <%= form_with url: add_member_channel_path(channel), method: :post, data: { turbo_stream: true } do |f| %>
-          <%= select_tag :user_id,
+            Add Member
+          </button>
+          <div id="add_member_form" data-add-member-target="form" class="hidden mt-4">
+            <%= form_with url: add_member_channel_path(channel), method: :post, data: { turbo_stream: true } do |f| %>
+              <%= select_tag :user_id,
                 options_from_collection_for_select(User.all, :id, :email),
                 class: "border p-2 w-full rounded mb-3" %>
-          <div class="flex justify-end gap-2">
-            <button type="button"
+              <div class="flex justify-end gap-2">
+                <button type="button"
               class="px-3 py-1 bg-gray-200 rounded"
               data-action="click->add-member#hideForm">
-              Cancel
-            </button>
-            <%= f.submit "Add",
+                  Cancel
+                </button>
+                <%= f.submit "Add",
               class: "px-3 py-1 bg-green-600 text-white rounded" %>
+              </div>
+            <% end %>
           </div>
-        <% end %>
+        </div>
       </div>
     </div>
   </div>

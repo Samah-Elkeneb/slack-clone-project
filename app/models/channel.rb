@@ -1,6 +1,6 @@
 class Channel < ApplicationRecord
   has_many :messages, dependent: :destroy
-  has_many :memberships
+  has_many :memberships, dependent: :destroy
   has_many :users, through: :memberships
   belongs_to :creator, class_name: "User"
 
