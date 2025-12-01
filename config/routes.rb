@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   resources :messages
   resources :channels
   get "home/index"
+  get "home/test_frontend"
   devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

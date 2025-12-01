@@ -1,29 +1,28 @@
-<h2>Sign up</h2>
-
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
-
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :password %>
-    <% if @minimum_password_length %>
-    <em>(<%= @minimum_password_length %> characters minimum)</em>
-    <% end %><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
-
-  <div class="actions">
-    <%= f.submit "Sign up" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+<div class="grid min-h-dvh grid-cols-[1fr_2.5rem_minmax(0,var(--container-lg))_2.5rem_1fr] grid-rows-[1fr_auto_1fr] overflow-clip">
+  <main class="grid grid-cols-1 max-sm:col-span-full max-sm:col-start-1 max-sm:row-span-full max-sm:bg-gray-950/5 max-sm:p-2 dark:max-sm:bg-white/5 sm:line-y sm:col-start-3 sm:row-start-2 sm:-mx-px sm:p-[calc(0.5rem+1px)]">
+    <div class="grid grid-cols-1 gap-10">
+      <div>
+        <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+          <%= render "devise/shared/error_messages", resource: resource %>
+          <div class="field">
+            <%= f.label :email, class:"block text-sm/6 font-medium" %><br />
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "block h-10 w-full appearance-none rounded-lg bg-white px-3 sm:text-sm dark:bg-white/5 outline -outline-offset-1 outline-gray-950/15 dark:outline-white/25 focus:outline-gray-950 dark:focus:outline-white data-error:outline-rose-500 dark:data-error:outline-rose-400", class: "block h-10 w-full appearance-none rounded-lg bg-white px-3 sm:text-sm dark:bg-white/5 outline -outline-offset-1 outline-gray-950/15 dark:outline-white/25 focus:outline-gray-950 dark:focus:outline-white data-error:outline-rose-500 dark:data-error:outline-rose-400" %>
+          </div>
+          <div class="field">
+            <%= f.label :password, class:"block text-sm/6 font-medium" %>
+            <% if @minimum_password_length %>
+              <em>(<%= @minimum_password_length %> characters minimum)</em>
+            <% end %><br />
+            <%= f.password_field :password, autocomplete: "new-password", class: "block h-10 w-full appearance-none rounded-lg bg-white px-3 sm:text-sm dark:bg-white/5 outline -outline-offset-1 outline-gray-950/15 dark:outline-white/25 focus:outline-gray-950 dark:focus:outline-white data-error:outline-rose-500 dark:data-error:outline-rose-400" %>
+          </div>
+          <div class="field">
+            <%= f.label :password_confirmation, class:"block text-sm/6 font-medium" %><br />
+            <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "block h-10 w-full appearance-none rounded-lg bg-white px-3 sm:text-sm dark:bg-white/5 outline -outline-offset-1 outline-gray-950/15 dark:outline-white/25 focus:outline-gray-950 dark:focus:outline-white data-error:outline-rose-500 dark:data-error:outline-rose-400" %>
+          </div>
+          <%= f.submit "Sign up", class: "gap-2 mt-10 w-full inline-flex justify-center rounded-full text-sm/6 font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 bg-gray-950 text-white hover:bg-gray-800 focus-visible:outline-gray-950 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white dark:hover:bg-gray-200 dark:focus-visible:outline-white dark:focus-visible:outline-white px-4 py-2" %>
+        <% end %>
+        <%= render "devise/shared/links" %>
+      </div>
+    </div>
+  </main>
+</div>

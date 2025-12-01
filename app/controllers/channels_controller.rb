@@ -38,9 +38,9 @@ end
 def show
   respond_to do |format|
     format.turbo_stream do
-      render turbo_stream: turbo_stream.replace(
+      render turbo_stream: turbo_stream.update(
         "modal_frame",
-        partial: "modal_content",
+        partial: "channel_content",
         locals: { channel: @channel }
       )
     end
@@ -65,6 +65,16 @@ end
   # GET /channels/new
   def new
     @channel = Channel.new
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.update(
+          "modal_frame",
+          partial: "new_channel",
+          locals: { channel: @channel }
+        )
+      end
+    format.html { render :new }
+    end
   end
 
   # GET /channels/1/edit

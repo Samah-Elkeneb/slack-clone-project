@@ -1,0 +1,37 @@
+<div class="fixed inset-0 bg-black/50 flex justify-center items-center z-50 show" data-controller="modal" data-modal-target="frame" data-action="click->modal#backgroundClose">
+  <div class="bg-white rounded-xl p-6 w-96 shadow-lg">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-semibold"><%= channel.name %></h2>
+      <button data-action="click->modal#close" class="text-gray-400 hover:text-gray-600">Close</button>
+    </div>
+    <p>This channel is created by <%= channel.creator.email.split('@').first %> on <%= channel.created_at.strftime("%-d %B %Y") %></p>
+    <ul id="members_list">
+      <% channel.users.each do |u| %>
+        <li><%= u.email %></li>
+      <% end %>
+    </ul>
+    <div data-controller="add-member" class="mt-4">
+      <button
+        class="bg-blue-600 text-white px-3 py-2 rounded"
+        data-action="click->add-member#showForm">
+        Add Member
+      </button>
+      <div id="add_member_form" data-add-member-target="form" class="hidden mt-4">
+        <%= form_with url: add_member_channel_path(channel), method: :post, data: { turbo_stream: true } do |f| %>
+          <%= select_tag :user_id,
+                options_from_collection_for_select(User.all, :id, :email),
+                class: "border p-2 w-full rounded mb-3" %>
+          <div class="flex justify-end gap-2">
+            <button type="button"
+              class="px-3 py-1 bg-gray-200 rounded"
+              data-action="click->add-member#hideForm">
+              Cancel
+            </button>
+            <%= f.submit "Add",
+              class: "px-3 py-1 bg-green-600 text-white rounded" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

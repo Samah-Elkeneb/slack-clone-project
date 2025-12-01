@@ -1,8 +1,5 @@
 <div class="flex h-screen flex-col justify-between border-e border-gray-100 bg-white">
   <div class="px-4 py-6">
-    <span class="grid h-10 w-32 place-content-center rounded-lg bg-gray-100 text-xs text-gray-600">
-      Logo
-    </span>
     <ul class="mt-6 space-y-1">
       <li>
         <details class="group [&amp;_summary::-webkit-details-marker]:hidden" data-controller="channels" open>
@@ -17,15 +14,24 @@
           <ul class="mt-2 space-y-1 px-4">
             <% @channels.each do |channel| %>
               <li>
-                <%= link_to (channel.public ?  "🌐 " : "🔒 ") + channel.name, messages_channel_path(channel),
+                <%= link_to (channel.public ?  "# " : "🔒 ") + channel.name, messages_channel_path(channel),
          data: { turbo_frame: "messages_frame",
              "action": "click->channels#subscribe",
               channels_target: "link", room: "#{channel.name}_#{channel.id}", },
-               class: "channel-link block px-3 py-2 rounded-md mb-1 hover:bg-gray-100" %>
+               class: "channel-link block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700" %>
               <% end %>
             </li>
             <li>
-              <%= link_to "Add channel", new_channel_path, class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white block font-medium" %>
+              <div class="flex" data-controller="modal" data-modal-target="frame">
+                <%= link_to new_channel_path, data: { action: "click->modal#open" }, class: "rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 flex items-center gap-2" do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="2" width="16" height="16" rx="2" ry="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <line x1="10" y1="5" x2="10" y2="15" stroke-linecap="round" stroke-linejoin="round"/>
+                    <line x1="5" y1="10" x2="15" y2="10" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  Add channel
+                <% end %>
+              </div>
             </li>
           </details>
         </li>
@@ -35,8 +41,7 @@
       <% if user_signed_in? %>
         <%= button_to destroy_user_session_path,
       method: :delete,
-      class: "flex items-center gap-3 bg-white p-3 hover:bg-gray-50 rounded",
-      title: "Logout",
+      class: "group relative flex w-full justify-center rounded-lg px-2 py-1.5 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700",
       form: { data: { turbo_confirm: "Are you sure you want to logout?" } } do %>
           <%# if current_user.profile_image%>
           <%# <img alt="" src="<%= current_user.profile_image " class="size-10 rounded-full object-cover"> %>
@@ -45,10 +50,13 @@
             <%= current_user.email.first.upcase %>
           </div>
           <%#end%>
-          <div class="flex flex-col text-sm leading-tight text-left">
+          <div class="flex flex-col text-sm leading-tight text-left pl-2">
             <span class="font-medium text-gray-800"><%= current_user.email.split("@").first %></span>
             <span class="text-gray-500 text-xs"><%= current_user.email %></span>
           </div>
+          <span class="invisible absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded-sm bg-gray-900 px-2 py-1.5 text-xs font-medium text-white group-hover:visible">
+            Logout
+          </span>
         <% end %>
       <% end %>
     </div>
