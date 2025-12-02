@@ -1,7 +1,7 @@
 class ChannelsController < ApplicationController
-  before_action :set_channel, only: %i[ show edit update destroy add_member]
+  before_action :set_channel, only: %i[ show edit update destroy add_member remove_member]
   before_action :authenticate_user!
-  before_action :require_admin!, only: %i[ edit update destroy add_member]
+  before_action :require_admin!, only: %i[ edit update destroy add_member remove_member]
 
   # CRUD
   def messages
@@ -55,6 +55,19 @@ end
   return if @channel.users.include?(@user)
 
   @channel.users << @user
+
+  respond_to do |format|
+    format.turbo_stream
+    format.html { redirect_to @channel }
+  end
+end
+
+def remove_member
+  @membership = @channel.memberships.find_by(user_id: params[:user_id])
+
+  return if @membership.nil?
+
+  @membership.destroy
 
   respond_to do |format|
     format.turbo_stream

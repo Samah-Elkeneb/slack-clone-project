@@ -9,7 +9,8 @@ export default class extends Controller {
 
     this.element.querySelectorAll("nav a").forEach((tab) => {
       const isActive = tab.dataset.tab === selected;
-      tab.classList.toggle("bg-gray-100", isActive);
+      tab.classList.toggle("border-b-2", isActive);
+      tab.classList.toggle("border-[#793c85]", isActive);
       tab.classList.toggle("text-gray-700", isActive);
       tab.classList.toggle("text-gray-500", !isActive);
     });

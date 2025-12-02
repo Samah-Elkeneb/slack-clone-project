@@ -17,6 +17,11 @@ function createRoomSubscription(roomName) {
       received(data) {
         document.getElementById("no-messages-div")?.remove();
         this.appendLine(data);
+        const trixInput = document.querySelector("#message_content");
+        trixInput.value = "";
+
+        const trixEditor = document.querySelector("trix-editor");
+        trixEditor.editor.loadHTML("");
       },
 
       appendLine(data) {

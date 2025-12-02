@@ -1,0 +1,22 @@
+<li class="m-2" id="membership_<%= channel.memberships.find_by(user_id: user.id).id %>">
+  <div class="flex justify-between items-center hover:bg-gray-100 rounded-lg ">
+    <div class="flex items-center gap-2 mx-2">
+      <div class="h-6 w-6 rounded-full bg-[#245696] flex items-center justify-center font- text-sm text-white">
+        <%= user.email.first.upcase %>
+      </div>
+      <h2 class="text-sm">
+        <%= user.email.split("@").first %>
+      </h2>
+    </div>
+    <% if current_user.admin?(channel)%>
+      <%= button_to remove_member_channel_path(channel, user_id: user.id),
+                    method: :delete,
+                    class: "text-gray-700 px-4 cursor-pointer" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="6" y1="6" x2="14" y2="14" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="14" y1="6" x2="6" y2="14" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      <% end %>
+    <% end %>
+  </div>
+</li>

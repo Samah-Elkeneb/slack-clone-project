@@ -1,52 +1,68 @@
 <div class="fixed inset-0 bg-black/50 flex justify-center items-center z-50 show" data-controller="modal" data-modal-target="frame" data-action="click->modal#backgroundClose">
   <div class="bg-white rounded-xl p-6 w-96 shadow-lg">
     <div class="flex justify-between items-center mb-4">
-      <h2 class="text-xl font-semibold"><%= channel.name %></h2>
-      <button data-action="click->modal#close" class="text-gray-400 hover:text-gray-600">Close</button>
+      <div class="flex items-center gap-2">
+        <% if channel.public %>
+          <svg viewBox="0 0 20 20" class="w-6 h-10">
+            <path fill="black" fill-rule="evenodd" d="M9.74 3.878a.75.75 0 1 0-1.48-.255L7.68 7H3.75a.75.75 0 0 0 0 1.5h3.67L6.472 14H2.75a.75.75 0 0 0 0 1.5h3.463l-.452 2.623a.75.75 0 0 0 1.478.255l.496-2.878h3.228l-.452 2.623a.75.75 0 0 0 1.478.255l.496-2.878h3.765a.75.75 0 0 0 0-1.5h-3.506l.948-5.5h3.558a.75.75 0 0 0 0-1.5h-3.3l.54-3.122a.75.75 0 0 0-1.48-.255L12.43 7H9.2zM11.221 14l.948-5.5H8.942L7.994 14z" clip-rule="evenodd"></path>
+          </svg>
+        <% else %>
+          <svg viewBox="0 0 20 20" class="w-6 h-10 text-black">
+            <path fill="black" fill-rule="evenodd" d="M10 1.5A4.5 4.5 0 0 0 5.5 6v1.5h-.25A2.25 2.25 0 0 0 3 9.75v6.5c0 .966.784 1.75 1.75 1.75h10.5A1.75 1.75 0 0 0 17 16.25v-6.5a2.25 2.25 0 0 0-2.25-2.25h-.25V6A4.5 4.5 0 0 0 10 1.5m3 6V6a3 3 0 1 0-6 0v1.5zM4.5 9.75A.75.75 0 0 1 5.25 9h9.5a.75.75 0 0 1 .75.75v6.5a.25.25 0 0 1-.25.25H4.75a.25.25 0 0 1-.25-.25z" clip-rule="evenodd"></path>
+          </svg>
+        <% end %>
+        <h2 class="text-lg font-semibold">
+          <%= channel.name %>
+        </h2>
+      </div>
+      <button data-action="click->modal#close" class="text-gray-400 hover:text-gray-600">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h84" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="6" y1="6" x2="14" y2="14" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="14" y1="6" x2="6" y2="14" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
     </div>
     <div data-controller="tabs">
-      <nav class="flex space-x-4" aria-label="Tabs">
+      <nav class="flex space-x-4 border-b border-gray-100" aria-label="Tabs">
         <a href="#" data-action="tabs#show" data-tab="1"
-       class="px-3 py-2 font-medium text-sm bg-gray-100 text-gray-700 rounded-md">
+       class="px-3 py-2 font-medium text-sm border-b-2 border-[#793c85] text-gray-700">
           About
         </a>
         <a href="#" data-action="tabs#show" data-tab="2"
        class="px-3 py-2 font-medium text-sm text-gray-500 hover:text-gray-700">
-          Members <%= channel.users.count%>
+          Members <span class="p-1 bg-gray-100 rounded-full"><%= channel.users.count%></span>
+        </a>
+        <a href="#" data-action="tabs#show" data-tab="3"
+       class="px-3 py-2 font-medium text-sm text-gray-500 hover:text-gray-700">
+          Edit
         </a>
       </nav>
-      <div data-tabs-target="content" data-tab="1" class="mt-4">
-        <p>This channel is created by <%= channel.creator.email.split('@').first %> on <%= channel.created_at.strftime("%-d %B %Y") %></p>
+      <div data-tabs-target="content" data-tab="1" class="mt-4 bg-gray-100 p-4">
+        <p class="text-sm text-gray-500">This channel is created by <%= channel.creator.email.split('@').first %> on <%= channel.created_at.strftime("%-d %B %Y") %></p>
       </div>
-      <div data-tabs-target="content" data-tab="2" class="mt-4 hidden">
-        <ul id="members_list">
-          <% channel.users.each do |u| %>
-            <li><%= u.email %></li>
-          <% end %>
-        </ul>
-        <div data-controller="add-member" class="mt-4">
-          <button
-        class="bg-blue-600 text-white px-3 py-2 rounded"
-        data-action="click->add-member#showForm">
-            Add Member
-          </button>
-          <div id="add_member_form" data-add-member-target="form" class="hidden mt-4">
-            <%= form_with url: add_member_channel_path(channel), method: :post, data: { turbo_stream: true } do |f| %>
-              <%= select_tag :user_id,
-                options_from_collection_for_select(User.all, :id, :email),
-                class: "border p-2 w-full rounded mb-3" %>
-              <div class="flex justify-end gap-2">
-                <button type="button"
-              class="px-3 py-1 bg-gray-200 rounded"
-              data-action="click->add-member#hideForm">
-                  Cancel
+      <div data-tabs-target="content" data-tab="2" class="mt-4 p-4 hidden">
+        <% if !User.not_in_channel(channel).empty? && current_user.admin?(channel)%>
+          <div data-controller="add-member">
+            <div class="flex justify-between items-center hover:bg-gray-100 rounded-lg ">
+              <div class="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-10 h-10 bg-[#edf5fa] rounded-lg p-2" fill="none" stroke="#2e639e" stroke-width="2"stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <line x1="19" y1="8" x2="19" y2="14" />
+                  <line x1="16" y1="11" x2="22" y2="11" />
+                </svg>
+                <button class="text-black px-3 py-2 cursor-pointer" data-action="click->add-member#showForm">
+                  Add Member
                 </button>
-                <%= f.submit "Add",
-              class: "px-3 py-1 bg-green-600 text-white rounded" %>
               </div>
-            <% end %>
+            </div>
+            <%= render "add_member_form", channel: channel %>
           </div>
-        </div>
+        <%end%>
+        <%= render "channel_members", channel: channel %>
+      </div>
+      <div data-tabs-target="content" data-tab="3" class="mt-4 hidden">
+        <%= render "form", channel: channel %>
       </div>
     </div>
   </div>

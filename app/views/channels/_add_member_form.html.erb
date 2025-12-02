@@ -1,0 +1,15 @@
+<div id="add_member_form" data-add-member-target="form" class="hidden mt-4">
+  <%= form_with url: add_member_channel_path(channel), method: :post, data: { turbo_stream: true } do |f| %>
+    <%= select_tag :user_id,
+                options_from_collection_for_select(User.not_in_channel(channel), :id, :email),
+                class: "border p-2 w-full rounded mb-3" %>
+    <div class="flex justify-end gap-2">
+      <button type="button"
+              class="px-3 py-1 bg-gray-200 rounded"
+              data-action="click->add-member#hideForm">
+        Cancel
+      </button>
+      <button type="submit" class="px-3 py-1 bg-green-600 text-white rounded" data-action="click->add-member#hideForm">Add</button>
+    </div>
+  <%end%>
+</div>

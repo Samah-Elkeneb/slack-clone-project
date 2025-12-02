@@ -1,8 +1,13 @@
 <div class="fixed inset-0 bg-black/50 flex justify-center items-center z-50" data-controller="modal" data-modal-target="frame" data-action="click->modal#backgroundClose">
   <div class="bg-white p-6 rounded-lg shadow-xl z-10 w-full max-w-lg mx-4">
     <div class="flex justify-between items-center mb-4">
-      <h2 class="text-xl font-semibold">Create New Channel</h2>
-      <button data-action="click->modal#close" class="text-gray-400 hover:text-gray-600">Close</button>
+      <h2 class="text-xl font-semibold">Create a Channel</h2>
+      <button data-action="click->modal#close" class="text-gray-400 hover:text-gray-600">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h84" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="6" y1="6" x2="14" y2="14" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="14" y1="6" x2="6" y2="14" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
     </div>
     <%= form_with(model: channel, class: "contents") do |form| %>
       <% if channel.errors.any? %>
@@ -17,7 +22,7 @@
       <% end %>
       <div class="my-5">
         <%= form.label :name %>
-        <%= form.text_field :name, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": channel.errors[:name].none?, "border-red-400 focus:outline-red-600": channel.errors[:name].any?}] %>
+        <%= form.text_field :name, required: true, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": channel.errors[:name].none?, "border-red-400 focus:outline-red-600": channel.errors[:name].any?}] %>
       </div>
       <div>
         <p>Visibility:</p>
@@ -30,8 +35,8 @@
           <%= form.label :private, "Private - Only specific people" %>
         </div>
       </div>
-      <div class="inline">
-        <%= form.submit class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
+      <div class="flex justify-end">
+        <%= form.submit "Create", class: "rounded-md px-4 py-2 bg-green-700 hover:bg-green-600 text-white font-medium cursor-pointer" %>
       </div>
     <% end %>
   </div>

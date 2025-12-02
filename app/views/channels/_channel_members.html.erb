@@ -1,0 +1,5 @@
+<ul id="members_list">
+  <% channel.users.each do |u| %>
+    <%= render "channel_member", channel: channel, user: u %>
+  <% end %>
+</ul>
