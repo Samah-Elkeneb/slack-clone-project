@@ -18,13 +18,13 @@
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
-  <body class="pt-8 pl-8 bg-[#340e38]">
+  <body class="pt-8 pl-8 bg-[#340e38] overflow-hidden h-dvh">
     <div class="grid place-items-start md:place-items-center">
       <%= turbo_frame_tag :flash do %>
         <div id="flash"></div>
       <% end %>
     </div>
-    <main class="flex bg-white rounded-l-lg">
+    <main class="flex h-[calc(100vh-3rem)]">
       <%= yield %>
     </main>
   </body>

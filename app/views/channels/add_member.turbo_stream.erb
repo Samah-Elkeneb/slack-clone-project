@@ -3,3 +3,9 @@
     <%= render partial: "channels/channel_member", formats: [:html], locals: { channel: @channel, user: @user } %>
   </template>
 </turbo-stream>
+<%= turbo_stream.update "members_count" do %>
+  <%= @channel.users.count %>
+<% end %>
+<%= turbo_stream.update "add_member_frame" do %>
+  <%= render partial: "add_member_form", locals: { channel: @channel } %>
+<% end %>

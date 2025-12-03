@@ -1,0 +1,6 @@
+<%= turbo_stream.append "channels_list" do %>
+  <%= render partial: "channel_item", locals: { channel: @channel } %>
+<% end %>
+<%= turbo_stream.update "modal_frame" do %>
+  <%= render partial: "channel_content", locals: { channel: @channel } %>
+<% end %>

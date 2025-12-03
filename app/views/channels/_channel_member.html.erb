@@ -8,7 +8,7 @@
         <%= user.email.split("@").first %>
       </h2>
     </div>
-    <% if current_user.admin?(channel)%>
+    <% if current_user.admin?(channel) && !channel.created_by?(user)%>
       <%= button_to remove_member_channel_path(channel, user_id: user.id),
                     method: :delete,
                     class: "text-gray-700 px-4 cursor-pointer" do %>

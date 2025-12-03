@@ -1,15 +1,45 @@
-<div id="add_member_form" data-add-member-target="form" class="hidden mt-4">
-  <%= form_with url: add_member_channel_path(channel), method: :post, data: { turbo_stream: true } do |f| %>
-    <%= select_tag :user_id,
+<turbo_frame id="add_member_frame">
+  <% if !User.not_in_channel(channel).empty? && current_user.admin?(channel)%>
+    <div data-controller="add-member">
+      <div class="flex justify-between items-center hover:bg-gray-100 rounded-lg ">
+        <div class="flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-10 h-10 bg-[#edf5fa] rounded-lg p-2" fill="none" stroke="#2e639e" stroke-width="2"stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <line x1="19" y1="8" x2="19" y2="14" />
+            <line x1="16" y1="11" x2="22" y2="11" />
+          </svg>
+          <button class="text-black px-3 py-2 cursor-pointer" data-action="click->add-member#showForm">
+            Add Member
+          </button>
+        </div>
+      </div>
+      <div id="add_member_form" data-add-member-target="form" class="hidden mt-4">
+        <%= form_with url: add_member_channel_path(channel), method: :post, data: { turbo_stream: true } do |f| %>
+          <%= select_tag :user_id,
                 options_from_collection_for_select(User.not_in_channel(channel), :id, :email),
                 class: "border p-2 w-full rounded mb-3" %>
-    <div class="flex justify-end gap-2">
-      <button type="button"
+          <div>
+            <p>Role:</p>
+            <div>
+              <%= f.radio_button :role, "admin" %>
+              <%= f.label :admin, "Admin" %>
+            </div>
+            <div>
+              <%= f.radio_button :role, "member", checked: true %>
+              <%= f.label :member, "Member" %>
+            </div>
+          </div>
+          <div class="flex justify-end gap-2">
+            <button type="button"
               class="px-3 py-1 bg-gray-200 rounded"
               data-action="click->add-member#hideForm">
-        Cancel
-      </button>
-      <button type="submit" class="px-3 py-1 bg-green-600 text-white rounded" data-action="click->add-member#hideForm">Add</button>
+              Cancel
+            </button>
+            <button type="submit" class="px-3 py-1 bg-green-600 text-white rounded" data-action="click->add-member#hideForm">Add</button>
+          </div>
+        <%end%>
+      </div>
     </div>
   <%end%>
-</div>
+</turbo_frame>

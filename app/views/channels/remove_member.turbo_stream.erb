@@ -1,1 +1,7 @@
 <%= turbo_stream.remove dom_id(@membership) %>
+<%= turbo_stream.update "members_count" do %>
+  <%= @channel.users.count %>
+<% end %>
+<%= turbo_stream.update "add_member_frame" do %>
+  <%= render partial: "add_member_form", locals: { channel: @channel } %>
+<% end %>

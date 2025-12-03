@@ -18,6 +18,10 @@ class Channel < ApplicationRecord
     public || users.exists?(user.id)
   end
 
+  def created_by?(user)
+    creator_id == user.id
+  end
+
   private
   def add_creator_as_admin
     memberships.create(user: creator, role: "admin")
