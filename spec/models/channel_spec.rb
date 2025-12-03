@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Channel, type: :model do
   let(:creator) { create(:user) }
+  let(:other_user) { create(:user) }
   let(:channel) { create(:channel, creator: creator) }
 
   # ---------------------------------------------------------------------------
@@ -77,6 +78,18 @@ RSpec.describe Channel, type: :model do
     it "returns false for private channels with no membership" do
       channel.update(public: false)
       expect(channel.accessible_by?(user)).to eq(false)
+    end
+  end
+  # ---------------------------------------------------------------------------
+  # Method: created_by?
+  # ---------------------------------------------------------------------------
+  describe "#created_by?" do
+    it "returns true if the given user is the creator" do
+      expect(channel.created_by?(creator)).to eq(true)
+    end
+
+    it "returns false if the given user is not the creator" do
+      expect(channel.created_by?(other_user)).to eq(false)
     end
   end
 end
