@@ -13,7 +13,7 @@
                       action: "click->channels#subscribe",
                       channels_target: "link", room: "#{channel.name}_#{channel.id}"
                        },
-                       id: dom_id(channel),
+                      id: dom_id(channel, :link),
                       class: "channel-link block py-2 font-medium text-[#d5c6db]"%>
   </div>
   <% if current_user.admin?(channel)%>

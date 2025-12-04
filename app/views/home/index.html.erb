@@ -2,7 +2,7 @@
   <div class="px-4 py-6 flex-1 overflow-y-auto min-h-0 flex flex-col text-base">
     <ul class="mt-6 space-y-1">
       <li>
-        <%= render partial: "channels/channels", locals: { channels: @channels } %>
+        <%= render partial: "channels/channels", locals: { channels: @channels, fill: @fill, stroke: @stroke } %>
       </li>
     </ul>
   </div>

@@ -10,7 +10,7 @@
   <ul class="mt-2 space-y-1 px-4">
     <%= turbo_frame_tag "channels_list" do %>
       <% channels.each do |channel| %>
-        <li>
+        <li id="<%= dom_id(channel) %>">
           <%= render partial: "channels/channel_item", locals: { channel: channel } %>
         </li>
       <%end%>
