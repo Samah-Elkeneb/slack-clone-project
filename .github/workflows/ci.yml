@@ -8,7 +8,6 @@ on:
 jobs:
   scan_ruby:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -18,15 +17,14 @@ jobs:
         with:
           bundler-cache: true
 
-      - name: Scan for common Rails security vulnerabilities using static analysis
+      - name: Scan for common Rails security vulnerabilities
         run: bin/brakeman --no-pager
 
-      - name: Scan for known security vulnerabilities in gems used
+      - name: Scan for known gem vulnerabilities
         run: bin/bundler-audit
 
   scan_js:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -36,7 +34,7 @@ jobs:
         with:
           bundler-cache: true
 
-      - name: Scan for security vulnerabilities in JavaScript dependencies
+      - name: Scan JS dependencies
         run: bin/importmap audit
 
   lint:
@@ -62,7 +60,7 @@ jobs:
           restore-keys: |
             rubocop-${{ runner.os }}-${{ env.DEPENDENCIES_HASH }}-
 
-      - name: Lint code for consistent style
+      - name: Lint code
         run: bin/rubocop -f github
 
   test:
@@ -75,6 +73,9 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
+
+      - name: Prepare test database
+        run: bin/rails db:create db:migrate RAILS_ENV=test
 
       - name: Run RSpec tests
         env:
@@ -92,15 +93,18 @@ jobs:
         with:
           bundler-cache: true
 
-      - name: Run System Tests
+      - name: Prepare test database
+        run: bin/rails db:create db:migrate RAILS_ENV=test
+
+      - name: Run system tests
         env:
           RAILS_ENV: test
-        run: bin/rails db:test:prepare test:system
+        run: bundle exec rspec spec/system
 
-      - name: Keep screenshots from failed system tests
+      - name: Upload screenshots if system tests fail
         uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: screenshots
-          path: ${{ github.workspace }}/tmp/screenshots
+          path: tmp/screenshots
           if-no-files-found: ignore
