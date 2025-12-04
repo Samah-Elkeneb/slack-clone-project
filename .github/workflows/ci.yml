@@ -3,12 +3,11 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   scan_ruby:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -18,15 +17,14 @@ jobs:
         with:
           bundler-cache: true
 
-      - name: Scan for common Rails security vulnerabilities using static analysis
+      - name: Scan for common Rails security vulnerabilities
         run: bin/brakeman --no-pager
-      
-      - name: Scan for known security vulnerabilities in gems used
+
+      - name: Scan for known gem vulnerabilities
         run: bin/bundler-audit
-      
+
   scan_js:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -36,7 +34,7 @@ jobs:
         with:
           bundler-cache: true
 
-      - name: Scan for security vulnerabilities in JavaScript dependencies
+      - name: Scan JS dependencies
         run: bin/importmap audit
 
   lint:
@@ -62,18 +60,11 @@ jobs:
           restore-keys: |
             rubocop-${{ runner.os }}-${{ env.DEPENDENCIES_HASH }}-
 
-      - name: Lint code for consistent style
+      - name: Lint code
         run: bin/rubocop -f github
 
   test:
     runs-on: ubuntu-latest
-
-    # services:
-    #  redis:
-    #    image: valkey/valkey:8
-    #    ports:
-    #      - 6379:6379
-    #    options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -83,22 +74,16 @@ jobs:
         with:
           bundler-cache: true
 
-      - name: Run tests
+      - name: Prepare test database
+        run: bin/rails db:create db:migrate RAILS_ENV=test
+
+      - name: Run RSpec tests
         env:
           RAILS_ENV: test
-          # RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-          # REDIS_URL: redis://localhost:6379/0
-        run: bin/rails db:test:prepare test
+        run: bundle exec rspec
 
   system-test:
     runs-on: ubuntu-latest
-
-    # services:
-    #  redis:
-    #    image: valkey/valkey:8
-    #    ports:
-    #      - 6379:6379
-    #    options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -108,17 +93,18 @@ jobs:
         with:
           bundler-cache: true
 
-      - name: Run System Tests
+      - name: Prepare test database
+        run: bin/rails db:create db:migrate RAILS_ENV=test
+
+      - name: Run system tests
         env:
           RAILS_ENV: test
-          # RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-          # REDIS_URL: redis://localhost:6379/0
-        run: bin/rails db:test:prepare test:system
+        run: bundle exec rspec spec/system
 
-      - name: Keep screenshots from failed system tests
-        uses: actions/upload-artifact@v4
+      - name: Upload screenshots if system tests fail
+        uses: actions/upload-artifact@v5
         if: failure()
         with:
           name: screenshots
-          path: ${{ github.workspace }}/tmp/screenshots
+          path: tmp/screenshots
           if-no-files-found: ignore
