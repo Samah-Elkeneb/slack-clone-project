@@ -3,6 +3,8 @@ slack_clone_project
 A real-time, single-page Slack-style communication platform built with Rails 8, Turbo, Stimulus, ActionCable, and Tailwind CSS.
 Users can join public channels, participate in conversations, create private channels, manage members, and experience seamless real-time updates — all without full page reloads.
 
+---
+
 🚀 Features
 🔸 Channels
 
@@ -26,6 +28,8 @@ Add/remove members.
 
 Edit channel settings (from a modal).
 
+---
+
 🔸 Real-time Messaging
 
 Messages broadcast via ActionCable.
@@ -38,6 +42,8 @@ Automatic loading of older messages when scrolling up (infinite scroll).
 
 Rich text editor for sending messages.
 
+---
+
 🔸 Single Page UI
 
 Entire app runs on one main page.
@@ -45,6 +51,8 @@ Entire app runs on one main page.
 Modals, forms, updates → handled with Turbo Frames & Turbo Streams.
 
 Fast, smooth UX similar to Slack.
+
+---
 
 🔸 Members & Roles
 
@@ -66,9 +74,13 @@ All members
 
 Admin-only actions
 
+---
+
 🔸 Authentication
 
 Implemented using Devise.
+
+---
 
 🛠 Tech Stack
 Component	Version / Tool
@@ -79,6 +91,9 @@ Frontend	Tailwind CSS
 Real-time	ActionCable
 SPA behavior	Turbo + Stimulus
 Auth	Devise
+
+---
+
 📦 Installation & Setup
 1. Clone the repo
 git clone https://github.com/Samah-Elkeneb/slack_clone_project.git
@@ -103,17 +118,29 @@ bin/rails server
 Visit:
 http://localhost:3000
 
+---
+
 🧪 Running Tests
 bundle exec rspec
 
+---
+
 📁 Project Structure
 app/
-  channels/         # ActionCable channels
-  controllers/      # Rails controllers (API-like, Turbo powered)
-  views/            # Turbo Frames, Streams, Partials, Modals
-  models/           # User, Channel, Membership, Message
-  javascript/
-    controllers/    # Stimulus controllers
+
+channels/ — ActionCable channels
+
+controllers/ — Rails controllers (API-like, Turbo-powered)
+
+views/ — Turbo Frames, Turbo Streams, Partials, Modals
+
+models/ — User, Channel, Membership, Message
+
+javascript/
+
+controllers/ — Stimulus controllers
+
+---
 
 🎯 Current Limitations
 
@@ -122,6 +149,8 @@ Direct messages (DMs) not implemented yet.
 Only two roles: admin, member.
 
 SQLite used for development.
+
+---
 
 🗺 Roadmap / Future Features
 
@@ -133,14 +162,20 @@ User presence (“online/offline”).
 
 Channel notifications & mentions.
 
+---
+
 🎥 Demo
 
 A demo video will be added soon.
+
+---
 
 🤝 Contributing
 
 Pull requests are welcome.
 For major changes, open an issue to discuss what you’d like to modify.
+
+---
 
 📄 License
 
