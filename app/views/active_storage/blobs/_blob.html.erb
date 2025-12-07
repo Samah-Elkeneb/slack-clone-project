@@ -2,7 +2,6 @@
   <% url = url_for(blob) %>
   <% if blob.image? %>
     <%= link_to url, target: "_blank", rel: "noopener noreferrer" do %>
-      <%# لو الصورة كبيرة نعمل تمثيل بحجم محدود %>
       <%= image_tag(blob.representable? ? blob.representation(resize_to_limit: [1024, 768]) : blob) %>
     <% end %>
   <% else %>
