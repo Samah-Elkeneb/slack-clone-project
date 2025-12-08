@@ -70,7 +70,7 @@ end
 group :development, :test do
   gem "rspec-rails"
   gem "factory_bot_rails"
-  gem "shoulda-matchers", "~> 6.0"
+  gem "shoulda-matchers", "~> 7.0"
   gem "faker", "~> 3.0"
 end
 
